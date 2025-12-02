@@ -5,7 +5,7 @@ import time
 
 # Import modul buatan kita sendiri
 try:
-    from modules import recon, scanning
+    from modules import recon, scanning, osint
 except ImportError:
     # Fallback jika folder modules belum ada/salah struktur
     pass 
@@ -53,25 +53,35 @@ class VeVoLib:
         """Menu Utama Program."""
         while True:
             self.banner()
+            # Tampilan Menu
             print(Fore.WHITE + "[1] " + Fore.CYAN + "Reconnaissance (Google Dorking)")
             print(Fore.WHITE + "[2] " + Fore.CYAN + "Scanning (Port Check)")
-            print(Fore.WHITE + "[3] " + Fore.CYAN + "About VeVoLib")
+            print(Fore.WHITE + "[3] " + Fore.MAGENTA + "OSINT Toolkit (IP/Phone/User)") # <-- Menu Baru
+            print(Fore.WHITE + "[4] " + Fore.CYAN + "About VeVoLib")
             print(Fore.WHITE + "[0] " + Fore.RED + "Keluar / Exit")
             
             try:
                 choice = input(Fore.YELLOW + "\n[VeVoLib] > ")
                 
+                # --- LOGIKA PENGARAH (ROUTING) ---
+                
                 if choice == '1':
-                    # Memanggil fungsi dari file modules/recon.py
+                    # PANGGIL MODUL RECON
                     recon.run_dorking()
                     input(Fore.WHITE + "\n[ENTER] Kembali ke menu...")
                 
                 elif choice == '2':
-                    # Memanggil fungsi dari file modules/scanning.py
+                    # PANGGIL MODUL SCANNING
                     scanning.run_port_scan()
                     input(Fore.WHITE + "\n[ENTER] Kembali ke menu...")
                 
                 elif choice == '3':
+                    # PANGGIL SUB-MENU OSINT (Ini yang kita perbaiki)
+                    # Kita arahkan ke fungsi submenu_osint yang ada di bawah
+                    self.submenu_osint()
+                
+                elif choice == '4':
+                    # TAMPILKAN INFO
                     print(Fore.GREEN + "\nVeVoLib adalah alat bantu untuk Legal Penetration Testing.")
                     print("Dibuat untuk membantu mencari kebenaran dalam keamanan sistem.")
                     input(Fore.WHITE + "\n[ENTER] Kembali ke menu...")
@@ -88,9 +98,11 @@ class VeVoLib:
                 print(Fore.RED + "\n\n[!] Operasi dibatalkan oleh pengguna.")
                 sys.exit()
             except Exception as e:
+                # Tangkap error jika modul belum siap
                 print(Fore.RED + f"\n[!] Terjadi Error: {e}")
                 input("Tekan Enter...")
 
 if __name__ == "__main__":
     app = VeVoLib()
+
     app.main_menu()
