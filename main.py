@@ -3,11 +3,22 @@ import sys
 import platform
 import time
 
-# Import modul buatan kita sendiri
+# --- IMPORT MODULES ---
+# Pastikan struktur folder Anda:
+# folder_proyek/
+# ├── main.py
+# ├── requirements.txt
+# └── modules/
+#     ├── __init__.py
+#     ├── recon.py
+#     ├── scanning.py
+#     └── osint.py
+
 try:
     from modules import recon, scanning, osint
-except ImportError:
-    # Fallback jika folder modules belum ada/salah struktur
+except ImportError as e:
+    # Fallback hanya untuk debugging jika modul belum siap
+    print(f"Warning: Modul tidak ditemukan ({e}). Pastikan folder 'modules' ada.")
     pass 
 
 # Pengecekan Library Eksternal
@@ -37,7 +48,7 @@ class VeVoLib:
         
         # ASCII Art
         print(Fore.CYAN + Style.BRIGHT + """
-   _    __       _    __       __    _ __    
+   _    __       _    __       __    _ __   
   | |  / /___   | |  / /___   / /   (_) /_   
   | | / / _ \\   | | / / __ \\ / /   / / __ \\  
   | |/ /  __/   | |/ / /_/ // /___/ / /_/ /  
@@ -49,6 +60,53 @@ class VeVoLib:
         print(Fore.RED + "\n  [ Tools by Indra ]" + Fore.BLUE + " [ Didukung oleh Gemini AI ]")
         print(Fore.GREEN + "=" * 60 + "\n")
 
+    # --- INI ADALAH FUNGSI YANG SEBELUMNYA HILANG ---
+    def submenu_osint(self):
+        """Menampilkan Sub-Menu Khusus OSINT."""
+        while True:
+            self.clear_screen()
+            print(Fore.MAGENTA + Style.BRIGHT + "=== OSINT TOOLKIT MENU ===")
+            print(Fore.WHITE + "[1] " + Fore.MAGENTA + "IP Address Lookup")
+            print(Fore.WHITE + "[2] " + Fore.MAGENTA + "Username Checker (Sherlock Style)")
+            print(Fore.WHITE + "[3] " + Fore.MAGENTA + "Phone Number Info")
+            print(Fore.WHITE + "[0] " + Fore.YELLOW + "Kembali ke Menu Utama")
+            
+            try:
+                choice = input(Fore.MAGENTA + "\n[OSINT] > ")
+                
+                if choice == '1':
+                    # Pastikan di file modules/osint.py ada fungsi run_ip_lookup()
+                    if 'osint' in sys.modules:
+                        osint.run_ip_lookup()
+                    else:
+                        print("Modul OSINT belum dimuat.")
+                    input(Fore.WHITE + "\n[ENTER] Lanjut...")
+                    
+                elif choice == '2':
+                    # Pastikan di file modules/osint.py ada fungsi run_username_check()
+                    if 'osint' in sys.modules:
+                        osint.run_username_check()
+                    else:
+                        print("Modul OSINT belum dimuat.")
+                    input(Fore.WHITE + "\n[ENTER] Lanjut...")
+
+                elif choice == '3':
+                    # Pastikan di file modules/osint.py ada fungsi run_phone_info()
+                    if 'osint' in sys.modules:
+                        osint.run_phone_info()
+                    else:
+                        print("Modul OSINT belum dimuat.")
+                    input(Fore.WHITE + "\n[ENTER] Lanjut...")
+
+                elif choice == '0':
+                    break # Keluar dari loop while ini, kembali ke main_menu
+                else:
+                    print(Fore.RED + "Pilihan tidak valid.")
+                    time.sleep(1)
+            except Exception as e:
+                print(Fore.RED + f"Error di modul OSINT: {e}")
+                input("Tekan Enter...")
+
     def main_menu(self):
         """Menu Utama Program."""
         while True:
@@ -56,7 +114,7 @@ class VeVoLib:
             # Tampilan Menu
             print(Fore.WHITE + "[1] " + Fore.CYAN + "Reconnaissance (Google Dorking)")
             print(Fore.WHITE + "[2] " + Fore.CYAN + "Scanning (Port Check)")
-            print(Fore.WHITE + "[3] " + Fore.MAGENTA + "OSINT Toolkit (IP/Phone/User)") # <-- Menu Baru
+            print(Fore.WHITE + "[3] " + Fore.MAGENTA + "OSINT Toolkit (IP/Phone/User)") 
             print(Fore.WHITE + "[4] " + Fore.CYAN + "About VeVoLib")
             print(Fore.WHITE + "[0] " + Fore.RED + "Keluar / Exit")
             
@@ -66,22 +124,18 @@ class VeVoLib:
                 # --- LOGIKA PENGARAH (ROUTING) ---
                 
                 if choice == '1':
-                    # PANGGIL MODUL RECON
                     recon.run_dorking()
                     input(Fore.WHITE + "\n[ENTER] Kembali ke menu...")
                 
                 elif choice == '2':
-                    # PANGGIL MODUL SCANNING
                     scanning.run_port_scan()
                     input(Fore.WHITE + "\n[ENTER] Kembali ke menu...")
                 
                 elif choice == '3':
-                    # PANGGIL SUB-MENU OSINT (Ini yang kita perbaiki)
-                    # Kita arahkan ke fungsi submenu_osint yang ada di bawah
+                    # SEKARANG INI SUDAH BISA BERJALAN KARENA FUNGSINYA SUDAH DIBUAT DI ATAS
                     self.submenu_osint()
                 
                 elif choice == '4':
-                    # TAMPILKAN INFO
                     print(Fore.GREEN + "\nVeVoLib adalah alat bantu untuk Legal Penetration Testing.")
                     print("Dibuat untuk membantu mencari kebenaran dalam keamanan sistem.")
                     input(Fore.WHITE + "\n[ENTER] Kembali ke menu...")
@@ -98,11 +152,9 @@ class VeVoLib:
                 print(Fore.RED + "\n\n[!] Operasi dibatalkan oleh pengguna.")
                 sys.exit()
             except Exception as e:
-                # Tangkap error jika modul belum siap
                 print(Fore.RED + f"\n[!] Terjadi Error: {e}")
                 input("Tekan Enter...")
 
 if __name__ == "__main__":
     app = VeVoLib()
-
     app.main_menu()
