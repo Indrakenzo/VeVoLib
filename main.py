@@ -17,7 +17,7 @@ import time
 try:
     from modules import recon, scanning, osint
 except ImportError as e:
-    print(f"Warning: Modul tidak ditemukan ({e}). Pastikan folder 'modules' ada.")
+    print(f"Warning: Modul tidak ditemukan ({e}). Pastikan folder 'modules' ada dan dependencies terinstall.")
     pass 
 
 # Pengecekan Library Eksternal
@@ -76,33 +76,20 @@ class VeVoLib:
                 choice = input(Fore.MAGENTA + "\n[OSINT] > ")
                 
                 if choice == '1':
-                    if 'osint' in sys.modules:
-                        osint.run_ip_lookup()
-                    else:
-                        print("Modul OSINT belum dimuat.")
+                    osint.run_ip_lookup()
                     input(Fore.WHITE + "\n[ENTER] Lanjut...")
                     
                 elif choice == '2':
-                    if 'osint' in sys.modules:
-                        osint.run_username_check()
-                    else:
-                        print("Modul OSINT belum dimuat.")
+                    osint.run_username_check()
                     input(Fore.WHITE + "\n[ENTER] Lanjut...")
 
                 elif choice == '3':
-                    if 'osint' in sys.modules:
-                        osint.run_phone_info()
-                    else:
-                        print("Modul OSINT belum dimuat.")
+                    osint.run_phone_info()
                     input(Fore.WHITE + "\n[ENTER] Lanjut...")
 
-                # [BARU] Logika untuk Subdomain Scanner
+                # Logika untuk Subdomain Scanner
                 elif choice == '4':
-                    if 'osint' in sys.modules:
-                        # Pastikan fungsi ini ada di osint.py Anda
-                        osint.run_subdomain_check() 
-                    else:
-                        print("Modul OSINT belum dimuat.")
+                    osint.run_subdomain_check() 
                     input(Fore.WHITE + "\n[ENTER] Lanjut...")
 
                 elif choice == '0':
@@ -110,6 +97,11 @@ class VeVoLib:
                 else:
                     print(Fore.RED + "Pilihan tidak valid.")
                     time.sleep(1)
+            except NameError:
+                # Menangkap error jika import osint gagal di awal karena kurang install library
+                print(Fore.RED + "[!] Modul OSINT gagal dijalankan karena ada library eksternal yang belum terinstall.")
+                print(Fore.WHITE + "Jalankan: pip install -r requirements.txt")
+                input("Tekan Enter...")
             except AttributeError:
                 print(Fore.RED + "[!] Fungsi belum tersedia di modul osint.py.")
                 print("Pastikan Anda sudah update kode osint.py dengan fitur Subdomain.")
